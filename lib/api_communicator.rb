@@ -8,13 +8,13 @@ def get_character_movies_from_api(character)
   character_hash = JSON.parse(all_characters)
   films = []
   films_data = []
-  character_hash["results"].each do |key, value|
+  character_hash["results"].each do |key, value| #try to refactor without each
     if key["name"] == character
       films = key["films"].collect do |film|
         film
       end
     end
-    films.each do |film|
+    films.each do |film| #use collect or map instead of each
       # binding.pry
         films_data << film
     end
@@ -38,7 +38,7 @@ def parse_character_movies(films_hash)
   films_hash.each do |curr_film|
     curr_film_parsed = RestClient.get(curr_film)
     films_parsed = JSON.parse(curr_film_parsed)
-    films_parsed.each do |title, film_title|
+    films_parsed.each do |title, film_title| #use select instead of each with an if statement
       # binding.pry
       if title == "title"
         film_titles.push(film_title)
@@ -48,8 +48,8 @@ def parse_character_movies(films_hash)
   print film_titles.join(', ')
 end
 
-films_hash = get_character_movies_from_api("Luke Skywalker")
-parse_character_movies(films_hash)
+# films_hash = get_character_movies_from_api("Luke Skywalker")
+# parse_character_movies(films_hash)
 
 def show_character_movies(character)
   films_hash = get_character_movies_from_api(character)

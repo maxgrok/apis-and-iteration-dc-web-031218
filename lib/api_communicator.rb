@@ -7,16 +7,19 @@ def get_character_movies_from_api(character)
   all_characters = RestClient.get('http://www.swapi.co/api/people/')
   character_hash = JSON.parse(all_characters)
   films = []
-  films_data = {}
-  character_hash["results"].each do |characters, value|
-    if key["name"] == characters
+  films_data = []
+  character_hash["results"].each do |key, value|
+    if key["name"] == character
       films = key["films"].collect do |film|
         film
       end
     end
     films.each do |film|
-      films_data = 
+      # binding.pry
+        films_data << film
     end
+    # binding.pry
+    return films_data
   end
   # iterate over the character hash to find the collection of `films` for the given
   #   `character`
@@ -31,16 +34,28 @@ end
 
 def parse_character_movies(films_hash)
   # some iteration magic and puts out the movies in a nice list
-  films_hash.each do |film|
-    print film["title"].join(", ")
+  film_titles = []
+  films_hash.each do |curr_film|
+    curr_film_parsed = RestClient.get(curr_film)
+    films_parsed = JSON.parse(curr_film_parsed)
+    films_parsed.each do |title, film_title|
+      # binding.pry
+      if title == "title"
+        film_titles.push(film_title)
+      end
+    end
   end
-
+  print film_titles.join(', ')
 end
+
+films_hash = get_character_movies_from_api("Luke Skywalker")
+parse_character_movies(films_hash)
 
 def show_character_movies(character)
   films_hash = get_character_movies_from_api(character)
   parse_character_movies(films_hash)
 end
+
 
 ## BONUS
 

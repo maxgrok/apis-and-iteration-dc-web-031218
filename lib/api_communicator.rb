@@ -48,8 +48,8 @@ def parse_character_movies(films_hash)
   print film_titles.join(', ')
 end
 
-# films_hash = get_character_movies_from_api("Luke Skywalker")
-# parse_character_movies(films_hash)
+films_hash = get_character_movies_from_api("Luke Skywalker")
+parse_character_movies(films_hash)
 
 def show_character_movies(character)
   films_hash = get_character_movies_from_api(character)

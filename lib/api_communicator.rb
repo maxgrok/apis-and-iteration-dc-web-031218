@@ -32,14 +32,15 @@ end
 
 def parse_character_movies(films_hash)
   # some iteration magic and puts out the movies in a nice list
+  titles =[]
   films_parsed = JSON.parse(films_hash)
-  films_parsed.each do |title|
-    title = JSON.parse()
-    binding.pry
+  films_parsed.each do |key, title|
+    titles.push(title)
     #print film["title"].join(", ")
-    key
   end
+    print titles.join(" ")
 end
+
 films_hash = get_character_movies_from_api("Luke Skywalker")
 parse_character_movies(films_hash)
 

@@ -5,19 +5,20 @@ require 'pry'
 def get_character_movies_from_api(character)
   #make the web request
   all_characters = RestClient.get('http://www.swapi.co/api/people/')
-  character_hash = JSON.parse(all_characters)
+  characters_hash = JSON.parse(all_characters)
+
   films = []
-  films_data = {}
-  character_hash["results"].each do |key, value|
+  films_data = []
+  characters_hash["results"].each do |key, value|
     if key["name"] == character 
       films = key["films"].collect do |film| 
         film 
       end
     end
-    films.each do |film|
-        films_data = RestClient.get(film)
+    films.each do |film| 
+        films_data.push(film)
     end
-    return films_data 
+    return films_data
   end
   # iterate over the character hash to find the collection of `films` for the given
   #   `character`
@@ -30,24 +31,45 @@ def get_character_movies_from_api(character)
   #  of movies by title. play around with puts out other info about a given film.
 end
 
-def parse_character_movies(films_hash)
+def parse_character_movies(films_array)
   # some iteration magic and puts out the movies in a nice list
   titles =[]
-  films_parsed = JSON.parse(films_hash)
-  films_parsed.each do |key, title|
-    titles.push(title)
-    #print film["title"].join(", ")
+  films_array.each do |current_film|
+    current_film_parse = RestClient.get(current_film)
+    films_parsed = JSON.parse(current_film_parse)
+    films_parsed.each do |key, value|
+    if key == "title"
+      titles.push(value)
+    end
   end
-    print titles.join(" ")
+end
+    print titles.join(", ")
 end
 
-films_hash = get_character_movies_from_api("Luke Skywalker")
-parse_character_movies(films_hash)
+films_array = get_character_movies_from_api("Luke Skywalker")
+parse_character_movies(films_array)
 
 def show_character_movies(character)
-  films_hash = get_character_movies_from_api(character)
-  parse_character_movies(films_hash)
+  films_array = get_character_movies_from_api(character)
+  parse_character_movies(films_array)
 end
+
+def get_titles_urls
+  all_characters = RestClient.get('http://www.swapi.co/api/people/')
+  characters_hash = JSON.parse(all_characters)
+
+  titles =[]
+  characters_hash["results"].each do |key, value|
+    if key == "title"
+      key.each do |name|
+        titles.push(name)
+      end
+    end
+    puts titles
+  end
+end
+
+get_titles_urls
 
 
 ## BONUS
